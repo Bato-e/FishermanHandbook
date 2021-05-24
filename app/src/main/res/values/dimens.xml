@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="header_main_height">170dp</dimen>
+    <dimen name="default_margin">12dp</dimen>
+    <dimen name="FAB_margin">16dp</dimen>
+    <dimen name="max_dia_img_height">350dp</dimen>
+</resources>

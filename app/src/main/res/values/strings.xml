@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">FishermanHandbook</string>
+    <string name="Fish">Fish</string>
+    <string name="Bite">Bites</string>
+    <string name="add_title">Add Item</string>
+    <string name="add_dialog_title">Setup the parameters</string>
+    <string name="ok">ОК</string>
+    <string name="dia_title_error">Enter the title!</string>
+    <string name="dia_content_error">Enter the content!</string>
+    <string name="cancel">Cancel</string>
+    <string name="dia_title_hint">Enter the title</string>
+    <string name="dia_content_hint">Enter the content</string>
+    <string name="dots">...</string>
+    <string name="dia_img_button_text">pick an image</string>
+    <string name="picture_chooser_title">Select Picture</string>
+    <string name="req_give_access_to_memory">Give the access to media files!</string>
+</resources>
