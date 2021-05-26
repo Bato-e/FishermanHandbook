@@ -6,8 +6,7 @@ import androidx.room.Insert
 import androidx.room.Query
 import com.example.fishermanhandbook.ListItem
 
-//Список всех доступынх для базы данных команд с указанием запроса SQL,если он нужен
-//Часть тех.реализации бд
+//A list of all available commands for the database, with an indication of the SQL query, if needed
 @Dao
 interface ItemsDao {
 

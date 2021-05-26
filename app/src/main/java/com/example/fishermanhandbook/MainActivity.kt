@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity(),AdapterUpdater {
 
 
 
-    //Метод для сохранения данных перед поворотом экрана
+    //Method for saving data before turning the screen
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putInt(KEY_TO_ITEM_SELECTED,currentType)
@@ -46,13 +46,13 @@ class MainActivity : AppCompatActivity(),AdapterUpdater {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        //Во время запуска ждем,пока заполнятся нач.элементы,
-        //потом устраиваем все остальные элементы
+        //During the launch, we wait until the initial elements are filled in
+        //then we install all the other elements
         lifecycleScope.launchWhenCreated {
             withContext(Dispatchers.IO){
-                //Иниц. бд
+                //initializing the database
             DatabaseManager.fillTheDb(this@MainActivity)
-                //Ждем сигнала об окончании записи
+                //Waiting for the signal to end recording
             DatabaseManager.completeInitFlow.collect {
                 if (it) {
                     initTheViews(savedInstanceState)
@@ -64,18 +64,18 @@ class MainActivity : AppCompatActivity(),AdapterUpdater {
 
     private suspend fun initTheViews(savedInstanceState: Bundle?) {
         withContext(Dispatchers.Main) {
-            //Получаем данные о нажатой на нижней панели кнопке после поворота экрана
+            //We get data about the button pressed on the bottom panel after turning the screen
             if (savedInstanceState != null && !savedInstanceState.isEmpty) {
                 currentType = savedInstanceState.getInt(KEY_TO_ITEM_SELECTED)
             }
 
-            //создание BottomNavigation
+            //creating a BottomNavigation
             navView = setupBottomNavigation()
 
-            //кнопка добавления
+            //add button
             initTheAddButton()
 
-            //создание recyclerView
+            //creating a recyclerView
             setupRecView()
         }
     }
@@ -105,7 +105,7 @@ class MainActivity : AppCompatActivity(),AdapterUpdater {
         rcView.adapter = adapter
     }
 
-    //создание слушателя для BottomNavigation
+    //creating a listener for BottomNavigation
     private fun setupBottomNavigationListener(navView: BottomNavigationView) {
         navView.setOnNavigationItemSelectedListener { menuitem ->
 
@@ -114,7 +114,7 @@ class MainActivity : AppCompatActivity(),AdapterUpdater {
                 R.id.id_fish -> {
                     currentType=ListItem.FISH_ITEM
                     lifecycleScope.launch(Dispatchers.Main) {
-                        //Достаем данные из бд для адаптера,передаем их тип
+                        //Getting data from the database for the adapter, passing their type
                         val list=DatabaseManager.getItems(ListItem.FISH_ITEM, context = baseContext)
                         adapter?.updateAdapter(list)
                     }
@@ -123,7 +123,7 @@ class MainActivity : AppCompatActivity(),AdapterUpdater {
                 R.id.id_bite -> {
                     currentType=ListItem.BITES_ITEM
                     lifecycleScope.launch(Dispatchers.Main) {
-                        //Достаем данные из бд для адаптера,передаем их тип
+                        //Getting data from the database for the adapter, passing their type
                         val list=DatabaseManager.getItems(ListItem.BITES_ITEM, context = baseContext)
                         adapter?.updateAdapter(list)
                     }
@@ -135,7 +135,7 @@ class MainActivity : AppCompatActivity(),AdapterUpdater {
         navView.selectedItemId = navView.menu[if (currentType==ListItem.FISH_ITEM) 0 else 1].itemId
     }
 
-    //Функция,котоаря вызывается по успешному завершению диалога
+    //The function that is called after the successful completion of the dialog
     override fun updateAdapter(listItem: ListItem) {
         navView.selectedItemId = navView.menu[currentType].itemId
         adapter?.addItemToAdapter(listItem)

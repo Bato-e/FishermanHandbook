@@ -9,27 +9,27 @@ import com.example.fishermanhandbook.database.ItemsDB
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 
-//Класс для управления базой данных,здесь расположены все запросы в базу данных
+//A class for managing the database, where all queries to the database are located
 object DatabaseManager {
 
     private var db:ItemsDB?=null
     private val completeFlow = MutableStateFlow(false)
     val completeInitFlow = completeFlow.asStateFlow()
     private fun getInstance(context: Context):ItemsDB{
-        //Создаем объект для доступа к бд,тех.реализация,указываем также название базы данных
+        //Creating an object to access the database, and also specifying the name of the database
         if (db==null) db = Room.databaseBuilder(context,ItemsDB::class.java,"Database")
-            //Добавляем колбек,который вызовется при создании бд
+            //Adding a callback that will be called when creating the database
             .addCallback( object :
                 RoomDatabase.Callback() {
                 override fun onCreate(db: SupportSQLiteDatabase) {
                     super.onCreate(db)
                     GlobalScope.launch(Dispatchers.IO) {
                         readInitItemsFromFile(context)
-                                //передаем сигнал об окончании записи
+                                //transmitting a signal about the end of recording
                             .onCompletion {
                                 completeFlow.value = true
                             }
-                                //Преобразуем строки в элементы итемов
+                                //Converting strings to elements of items
                             .map { str ->
                             val (titleText: String,
                                 contentText: String,
@@ -42,7 +42,7 @@ object DatabaseManager {
                                 imageName = image,
                                 contentType = ListItem.ContentType.StandardIconItem
                             )
-                                //Вписываем итемы в бд
+                                //Entering items in the database
                         }.collect { item->
                             getInstance(context).getDao().insertItem(item)
                         }
@@ -54,16 +54,16 @@ object DatabaseManager {
     }
 
 
-    //Метод для инициализации вставки начальных итемов бд
-    //Сам метод тут не важен (ывзывается get,чтобы лишнего не вписать/удалить)
-    //Важно только что инициализируется бд
+    //Method for initializing the insertion of initial db items
+    //
+    //the database is being initialized
     suspend fun fillTheDb(context: Context){
         if (getInstance(context).getDao().getItems(ListItem.FISH_ITEM).isNotEmpty())
             completeFlow.value=true
     }
 
 
-    //Считываем строки с файла items.txt
+    //Reading lines from the file items.txt
     private fun readInitItemsFromFile(context: Context): Flow<String> {
         val words = mutableListOf<String>()
         val inputStream = context.assets.open("items.txt")
@@ -71,22 +71,22 @@ object DatabaseManager {
             words.add(it)
         }
 
-        //Возвращаем поток данных
+        //Returning the data stream
         return words.asFlow()
     }
 
 
-    //считать все Итемы
+    //Read all items
     suspend fun getItems(type:Int,context: Context):List<ListItem> = withContext(Dispatchers.IO){
         getInstance(context).getDao().getItems(type)
     }
 
-    //ввести новый Итем в бд
+    //enter a new item in the database
     suspend fun insertItem(item: ListItem,context: Context){
         getInstance(context).getDao().insertItem(item)
     }
 
-    //Удалить итем
+    //delete item
     suspend fun deleteItem(item: ListItem,context: Context){
         getInstance(context).getDao().deleteItem(item)
     }

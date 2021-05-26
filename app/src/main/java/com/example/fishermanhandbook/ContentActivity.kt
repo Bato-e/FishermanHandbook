@@ -24,15 +24,15 @@ class ContentActivity: AppCompatActivity() {
 
         Log.d("tut",intent.extras?.get("type").toString())
 
-        //Проверка на то,начальный итем или новый (со стд иконкой)
+        //Checking whether it is the initial item or a new one (with the std icon)
 
 
 
         if (intent.getStringExtra("type") == ListItem.ContentType.StandardIconItem.toString()){
-            //Случай предустановленной картинки
+            //The case of the preset image
              im.setImageResource(resources.getIdentifier(intent.getStringExtra("image") , "drawable", packageName))
         }
-        //Случай картинки из галереи
+             //Case of a picture from the gallery
         else if (intent.getStringExtra("type") == ListItem.ContentType.NewIconItem.toString()){
             im.setImageURI(Uri.parse(intent.getStringExtra("image")))
         }

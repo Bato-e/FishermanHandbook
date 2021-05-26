@@ -22,7 +22,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 
 
-//Диалог для описания нового объекта
+//Dialog for describing a new object
 class AddSubjectDialog : DialogFragment() {
 
     private var type:Int=0
@@ -37,7 +37,7 @@ class AddSubjectDialog : DialogFragment() {
         const val REQUEST_PERMS_REQUEST_CODE = 456
 
 
-        //Метод для вызова диалога с передачей нужного типа данных (чтобы объект пошел в нужный список)
+        //Method for calling a dialog with the transfer of the desired data type
         fun newInstance(type:Int):AddSubjectDialog{
             val bundle = Bundle()
             bundle.putInt(KEY_TO_TYPE,type)
@@ -47,7 +47,7 @@ class AddSubjectDialog : DialogFragment() {
         }
     }
 
-    //Присоединение интерфейса для передачи данных в конце
+    //Attaching the interface for data transfer at the end
     override fun onAttach(context: Context) {
         super.onAttach(context)
         adapterUpdater = context as AdapterUpdater
@@ -67,7 +67,7 @@ class AddSubjectDialog : DialogFragment() {
 
 
 
-        // Отправляем заявку на выбор картинки из галереи с учетом дальнейшего использования
+        // We send a request to select an image from the gallery, taking into account further use
         imgButton.setOnClickListener {
             requestPermissions(Manifest.permission.READ_EXTERNAL_STORAGE)
         }
@@ -76,7 +76,7 @@ class AddSubjectDialog : DialogFragment() {
         return builder
             .setView(v)
             .setTitle(R.string.add_title)
-                //Слушатель на кнопку ОК
+                //Listener on the OK button
             .setPositiveButton(getString(R.string.ok)
             ) { _, _ ->
                 if (titleEditText.text == null || titleEditText.text.isEmpty()) {
@@ -106,7 +106,7 @@ class AddSubjectDialog : DialogFragment() {
                 dismiss()
 
             }
-                //Слушатель на кнопку Cancel
+                //Listener on the Cancel button
             .setNegativeButton(getString(R.string.cancel)) { _, _ ->
                 dismiss()
             }
@@ -114,13 +114,13 @@ class AddSubjectDialog : DialogFragment() {
     }
 
 
-    //Метод,который вызывается после обработки заявки (на выход: номер запроса,код результата,результат )
+    //Method that is called after processing the request (output: request number, result code, result )
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK){
             when (requestCode){
                 PICK_IMAGE_REQUEST_CODE -> {
-                    //Разрешаем uri (коду) картинки быть задействованным долго
+                    //We allow the uri (code) of the image to be used for a long time
                     val takeFlags: Int = Intent.FLAG_GRANT_READ_URI_PERMISSION or
                             Intent.FLAG_GRANT_WRITE_URI_PERMISSION
                     data?.data?.let {  context?.contentResolver?.takePersistableUriPermission(it, takeFlags) }
@@ -131,12 +131,12 @@ class AddSubjectDialog : DialogFragment() {
         }
     }
 
-    //Метод для инициализации типа согласну переданным данным
+    //Method for initializing the type according to the passed data
     private fun getElemsFromArgs() {
         type = arguments?.getInt(KEY_TO_TYPE)!!
     }
 
-    //Запрашиваем разрешение на использование медиафайлов
+    //Requesting permission to use media files
     private fun requestPermissions(permission:String) {
         if (context?.let { ContextCompat.checkSelfPermission(it, permission) }
             != PackageManager.PERMISSION_GRANTED) {
@@ -146,7 +146,7 @@ class AddSubjectDialog : DialogFragment() {
     }
 
 
-    //Смотрим на результат запроса на разрешение
+    //Looking at the result of the permission request
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,

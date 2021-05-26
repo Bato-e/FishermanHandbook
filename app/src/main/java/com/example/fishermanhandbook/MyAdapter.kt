@@ -18,7 +18,7 @@ import kotlinx.coroutines.withContext
 import java.io.InputStream
 
 
-//скоуп нужен для асинхронных запросов в базу данных
+//asynchronous database requests
 class MyAdapter(var listArrayR:ArrayList<ListItem> = ArrayList(), var contextR: Context,var scope:LifecycleCoroutineScope)
     : RecyclerView.Adapter<MyAdapter.ViewHolder>() {
 
@@ -48,13 +48,13 @@ class MyAdapter(var listArrayR:ArrayList<ListItem> = ArrayList(), var contextR: 
     }
 
     suspend fun deleteItemFromAdapter(listItem: ListItem){
-        //удаление итема из адапера
+        //removing an item from the adapter
         val pos = listArrayR.indexOf(listItem)
         listArrayR.remove(listItem)
         notifyItemRemoved(pos)
 
         try {
-            //обращение в базу данных для удаления данных
+            //accessing the database to delete data
             withContext(Dispatchers.IO){ DatabaseManager.deleteItem(listItem,contextR)}
         }catch (e:Exception){
             Toast.makeText(contextR,"Error while deleting from db",Toast.LENGTH_SHORT).show()
@@ -64,11 +64,11 @@ class MyAdapter(var listArrayR:ArrayList<ListItem> = ArrayList(), var contextR: 
     fun addItemToAdapter(listItem: ListItem){
 
 
-        //добавление итема в адаптер
+        //adding an item to the adapter
         listArrayR.add(listItem)
         notifyItemChanged(listArrayR.size-1)
 
-        //Добавление итема в бд
+        //Adding an item to the database
         scope.launch(Dispatchers.IO) {
             DatabaseManager.insertItem(listItem,contextR)
         }
@@ -114,7 +114,7 @@ class MyAdapter(var listArrayR:ArrayList<ListItem> = ArrayList(), var contextR: 
             listItem: ListItem,
             context: Context
         ) {
-            //Установка иконок в зависимости от типа итема
+            //Setting icons depending on the item type
             if (listItem.contentType == ListItem.ContentType.StandardIconItem)
                 im.setImageResource(
                     context.resources.getIdentifier(
@@ -130,7 +130,7 @@ class MyAdapter(var listArrayR:ArrayList<ListItem> = ArrayList(), var contextR: 
                 im.setImageBitmap(selectedImage)
             }
         }
-
+//Context Restriction
         private fun specifyTheTexts(
             listItem: ListItem,
             context: Context

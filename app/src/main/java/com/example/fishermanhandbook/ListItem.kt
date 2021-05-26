@@ -3,23 +3,21 @@ package com.example.fishermanhandbook
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-//Обозначением Entity мы говорим,что поля этого класса будут в бд,а также указываем название таблицы
+//By the Entity designation, we say that the fields of this class will be in the database,and also specify the name of the table
 @Entity(tableName = "Items")
 data class ListItem (
-        //Ключ для базы данных,он уникальный и заполняется сам
+        //The key for the database,it is unique and is filled in by itself
         @PrimaryKey(autoGenerate = true)
         var id:Int=0,
         var titleText: String,
         var contentText: String,
-        //В какое поле (fish/bites) заносить итем
+        //In which field (fish/bites) to enter the item
         var itemType:Int,
-        //Материал для загрузки картинки
-        //По умолчанию тут указываются картинки для каждого из итемов.
-        //Указывать нужно названия новых картинок БЕЗ .png
-        //TODO здесь можно менять картинки итемов в списке по умолчанию
+        //Material for uploading images
+        //by default, images are specified here for each of the items.
+        //here you can change the images of items in the default list
         var imageName:String = if (itemType == FISH_ITEM) "ic_fish" else "ic_bite",
-        //Тип итема - презагруженный или новый
-        //Разница заключается в методах работы с imageName
+        //Item type-preloaded or new
         var contentType:ContentType){
 
         companion object {
@@ -28,7 +26,7 @@ data class ListItem (
         }
 
 
-        //Тип иконки - стандартная и новопоставленная (предустановленные картинки - первый пункт)
+        //Icon type - standard and newly added (pre-installed images are the first item)
         enum class ContentType{
                 StandardIconItem,
                 NewIconItem
